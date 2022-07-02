@@ -1,20 +1,17 @@
 #include "header.hpp"
 #define PORT 8000
 
-void do_staff(char **argv, char **envp)
-{
-
-}
-
 int main(int argc, char **argv, char **envp)
 {
 	(void) argc;
+	(void) argv;
 	int server_fd;
 	int new_socket = 0;
 	int addr_len;
 	int valread;
 	struct sockaddr_in address;
 	std::string hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 18\n\nHello from server!";
+	CGIResponse MyResponse("cgi", argv, envp);
 
 	address.sin_family = AF_INET;
 	address.sin_port = htons(PORT);
@@ -52,7 +49,13 @@ int main(int argc, char **argv, char **envp)
 		{
 			std::cerr << "no message\n";
 		}
-		
+		MyResponse.ExecuteCGIAndRedirect();
+		std::ifstream cgi_file;
+		cgi_file.open("temp_fileOut");
+		char buffer2[1024];
+		memset(buffer2, '\0', 1024);
+		cgi_file.read(buffer2, 1024);
+		write(new_socket, buffer2, strlen(buffer2));
 		close(new_socket);
         //printf("------------------Hello message sent-------------------\n");
 		//str.close();

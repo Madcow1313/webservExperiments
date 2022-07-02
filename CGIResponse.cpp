@@ -1,6 +1,6 @@
 #include "CGIresponse.hpp"
 
-CGIResponse::CGIResponse()
+CGIResponse::CGIResponse(std::string name, char **argv, char **envp) : _name(name), _envp(envp), _argv(argv)
 {
 }
 
@@ -28,8 +28,10 @@ void CGIResponse::ExecuteCGIAndRedirect()
 	OldFds[0] = dup(STDIN_FILENO);
 	OldFds[1] = dup(STDOUT_FILENO);
 
-	fdOut = open("temp_fileOut", O_CREAT, 777);
-	
+	if ((fdOut = open("temp_fileOut", O_CREAT | O_RDWR, 0777)) < 0)
+	{
+		std::cerr << "can't open or create file\n";
+	}
 	pid = fork();
 
 	if (pid < 0)
@@ -38,16 +40,23 @@ void CGIResponse::ExecuteCGIAndRedirect()
 	}
 	if (pid == 0)
 	{
-		dup2(fdOut, STDOUT_FILENO);
-		std::cout << GetFirstHeader();
-		execve(_name.c_str(), NULL, envp);
+		if (dup2(fdOut, STDOUT_FILENO) < 0)
+			std::cerr << "can't dup\n";
+		std::cout << _firstHeader;
+		if (execve("cgi", _argv, _envp) < 0)
+		{
+			std::cerr << "execve failed\n";
+		}
 	}
 	else
 	{
-		char buffer[1024];
 		waitpid(-1, NULL, 0);
-		read(fdOut, buffer, 1024);
 	}
 	dup2(OldFds[1], STDOUT_FILENO);
 	close(fdOut);
+}
+
+std::string CGIResponse::GetName()
+{
+	return _name;
 }

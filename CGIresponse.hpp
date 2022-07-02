@@ -6,13 +6,13 @@ class CGIResponse
 private:
 	std::string _name;
 	std::string _firstHeader;
-	char **envp;
+	char **_envp;
+	char **_argv;
 public:
-	CGIResponse();
+	CGIResponse(std::string name,  char **argv, char **envp);
 	~CGIResponse();
 	void ExecuteCGIAndRedirect();
 	void SetFirstHeader();
 	std::string GetFirstHeader();
+	std::string GetName();
 };
-
-

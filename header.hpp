@@ -12,3 +12,4 @@
 #include <arpa/inet.h>
 #include <sys/wait.h>
 #include <fstream>
+#include "CGIresponse.hpp"

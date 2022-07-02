@@ -4,6 +4,7 @@ int main(int argc, char **argv, char **envp)
 {
 	(void) argc;
 	(void) argv;
+
     cout << "Content-type:text/html\r\n\r\n";
     cout << "<html>\n";
     cout << "<head>\n";
@@ -16,6 +17,5 @@ int main(int argc, char **argv, char **envp)
 
     cout << "</body>\n";
     cout << "</html>\n";
-
     return 0;
 }

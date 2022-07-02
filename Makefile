@@ -6,7 +6,7 @@ CGI = cgi
 
 CFLAGS = -Wall -Wextra -Werror
 
-SOURCE_SERVER = main_server_in_c.cpp
+SOURCE_SERVER = main_server_in_c.cpp CGIResponse.cpp
 
 SOURCE_CLIENT = main_client_in_c.cpp
 
@@ -36,6 +36,6 @@ clean:
 	rm -rf $(OBJS_SERVER) $(OBJS_CLIENT) $(OBJS_CGI)
 
 fclean: clean
-	rm -rf $(SERVER) $(CLIENT)$(CGI)
+	rm -rf $(SERVER) $(CLIENT) $(CGI)
 
 re: fclean server client cgi
