@@ -49,16 +49,28 @@ int main(int argc, char **argv, char **envp)
 		{
 			std::cerr << "no message\n";
 		}
-		MyResponse.ExecuteCGIAndRedirect();
-		std::ifstream cgi_file;
-		cgi_file.open("temp_fileOut");
-		char buffer2[1024];
-		memset(buffer2, '\0', 1024);
-		cgi_file.read(buffer2, 1024);
-		write(new_socket, buffer2, strlen(buffer2));
+		if (MyResponse.GetIsCGI())
+		{
+			MyResponse.ExecuteCGIAndRedirect();
+			std::ifstream cgi_file;
+			cgi_file.open("temp_fileOut");
+			char buffer2[1024];
+			memset(buffer2, '\0', 1024);
+			cgi_file.read(buffer2, 1024);
+			write(new_socket, buffer2, strlen(buffer2));
+		}
+		else
+		{
+			Response ErrorResponce("text/html", 0, "wisdom"); //application/octet-stream
+			ErrorResponce.FillCodes();
+			ErrorResponce.MakeHTTPResponse(403);
+			write(new_socket, ErrorResponce.GetResponse().c_str(), ErrorResponce.GetResponse().size());
+			std::cout << ErrorResponce.GetResponse();
+			// Image MyImage("7.jpg");
+			// MyImage.PushToBrowser(new_socket);
+		}
 		close(new_socket);
         //printf("------------------Hello message sent-------------------\n");
 		//str.close();
 	}
-
 }

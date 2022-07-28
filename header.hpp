@@ -13,3 +13,9 @@
 #include <sys/wait.h>
 #include <fstream>
 #include "CGIresponse.hpp"
+#include <vector>
+#include "Imagetobrowser.hpp"
+#include <string>
+#include <map>
+#include <ctime>
+#include "Responce.hpp"

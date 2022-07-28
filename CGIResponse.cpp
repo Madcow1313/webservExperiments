@@ -1,6 +1,7 @@
 #include "CGIresponse.hpp"
 
-CGIResponse::CGIResponse(std::string name, char **argv, char **envp) : _name(name), _envp(envp), _argv(argv)
+CGIResponse::CGIResponse(std::string name, char **argv, char **envp) :
+	_name(name), _envp(envp), _argv(argv), _is_CGI(false)
 {
 }
 
@@ -28,9 +29,10 @@ void CGIResponse::ExecuteCGIAndRedirect()
 	OldFds[0] = dup(STDIN_FILENO);
 	OldFds[1] = dup(STDOUT_FILENO);
 
-	if ((fdOut = open("temp_fileOut", O_CREAT | O_RDWR, 0777)) < 0)
+	if ((fdOut = open("temp_fileOut", O_CREAT | O_TRUNC | O_RDWR, 0777)) < 0)
 	{
 		std::cerr << "can't open or create file\n";
+		return ;
 	}
 	pid = fork();
 
@@ -43,7 +45,7 @@ void CGIResponse::ExecuteCGIAndRedirect()
 		if (dup2(fdOut, STDOUT_FILENO) < 0)
 			std::cerr << "can't dup\n";
 		std::cout << _firstHeader;
-		if (execve("cgi", _argv, _envp) < 0)
+		if (execve(_name.c_str(), _argv, _envp) < 0)
 		{
 			std::cerr << "execve failed\n";
 		}
@@ -59,4 +61,9 @@ void CGIResponse::ExecuteCGIAndRedirect()
 std::string CGIResponse::GetName()
 {
 	return _name;
+}
+
+bool CGIResponse::GetIsCGI()
+{
+	return _is_CGI;
 }

@@ -6,7 +6,7 @@ CGI = cgi
 
 CFLAGS = -Wall -Wextra -Werror
 
-SOURCE_SERVER = main_server_in_c.cpp CGIResponse.cpp
+SOURCE_SERVER = main_server_in_c.cpp CGIResponse.cpp Imagetobrowser.cpp Response.cpp
 
 SOURCE_CLIENT = main_client_in_c.cpp
 
@@ -15,7 +15,7 @@ SOURCE_CGI = main_cgi_server.cpp
 CC = c++
 
 OBJS_SERVER = $(SOURCE_SERVER:.cpp=.o)
-
+ 
 OBJS_CLIENT = $(SOURCE_CLIENT:.cpp=.o)
 
 OBJS_CGI = $(SOURCE_CGI:.cpp=.o)
