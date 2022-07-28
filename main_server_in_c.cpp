@@ -34,7 +34,9 @@ int main(int argc, char **argv, char **envp)
 		std::cerr << "Can't listen\n";
 		exit (EXIT_FAILURE);
 	}
-	setsockopt(server_fd,0,0,NULL, SO_REUSEADDR);
+
+	int yes = 1;
+	setsockopt(server_fd,0,0,&yes, SO_REUSEADDR);
 	while (1)
 	{
 		std::cout << "Waiting for connection\n";
@@ -62,7 +64,6 @@ int main(int argc, char **argv, char **envp)
 		else
 		{
 			Response ErrorResponce("text/html", 0, "wisdom"); //application/octet-stream
-			ErrorResponce.FillCodes();
 			ErrorResponce.MakeHTTPResponse(403);
 			write(new_socket, ErrorResponce.GetResponse().c_str(), ErrorResponce.GetResponse().size());
 			std::cout << ErrorResponce.GetResponse();

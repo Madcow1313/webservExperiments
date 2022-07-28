@@ -42,8 +42,8 @@ void Image::PushToBrowser(int fd)
 	std::string buffer;
 	string_to_push.append("HTTP/1.1 200 OK\n");
 	string_to_push.append("Content-type: image/jpeg\r\n\r\n");
-	// string_to_push.append("Content-Transfer-Encoding: binary\n");
-	// string_to_push.append("Content-length: 1000000;charset=ISO-8859-4 \r\n\r\n\n");
+	//string_to_push.append("Content-Transfer-Encoding: binary\n");
+	//string_to_push.append("Content-length: 10000000;charset=ISO-8859-4 \r\n\r\n\n");
 	//ConvertToChar();
 	// string_to_push.append("<html>\n");
 	// string_to_push.append("<body>\n");

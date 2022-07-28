@@ -1,4 +1,4 @@
-#include "Responce.hpp"
+#include "Response.hpp"
 
 Response::Response()
 {
@@ -9,6 +9,8 @@ Response::Response(std::string content_type, int content_length, std::string bod
 	_content_type = content_type;
 	_content_length = content_length;
 	_body = body;
+	SetMethods();
+	FillCodes();
 }
 Response::~Response()
 {
@@ -101,17 +103,19 @@ void Response::FillCodes()
 
 void Response::MakeHTTPResponse(int code)
 {
-	_response.append("HTTP/1.1 " + CodeToString(code) + " " + _codes[code] + "\n");
+	if (!_response_code)
+		_response_code = code;
+	_response.append("HTTP/1.1 " + CodeToString(_response_code) + " " + _codes[_response_code] + "\n");
 	_response.append("Server: server\n");
 	_response.append("Date: " + GetDateAndTime());
 	_response.append("Content-Type: " + GetContentType() + "\n");
-	if (code >= 400 && code < 500 )
+	if (_response_code >= 400 && _response_code <= 500 )
 	{
 		_body.clear();
 		_body.append("<p style=\"text-align:center;\">");
 		_body.append("<b>");
 		_body.append("Sorry! Can't load page. Please, contact administrator. Error: ");
-		_body.append(_codes[code]);
+		_body.append(_codes[_response_code]);
 		_body.append("<b>");
 		_body.append("</p>");
 		_body.append("\n");
@@ -171,4 +175,29 @@ void Response::ClearContents()
 	_content_type.clear();
 	_content_length = 0;
 	_body.clear();
+	_response_code = 0;
+}
+
+void Response::SetMethods()
+{
+	_allowed_methods.push_back("GET");
+	_allowed_methods.push_back("POST");
+	_allowed_methods.push_back("PUT");
+	_allowed_methods.push_back("DELETE");
+}
+
+void Response::SetContentLength(int length)
+{
+	_content_length = length;
+}
+
+
+void Response::CheckMethod(std::string &method)
+{
+	for (size_t i = 0; i < _allowed_methods.size(); i++)
+	{
+		if (!method.compare(_allowed_methods[i]))
+			return ;
+	}
+	_response_code = 405;
 }

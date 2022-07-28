@@ -18,4 +18,4 @@
 #include <string>
 #include <map>
 #include <ctime>
-#include "Responce.hpp"
+#include "Response.hpp"
